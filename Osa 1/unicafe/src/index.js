@@ -9,12 +9,45 @@ const Header = ({ text }) => (
   </div>
 )
 
-const Statistics = (props) => (
-  <div>
-    <p>
-      Number of {props.name} feedback: {props.type}
-    </p>
-  </div>
+const Statistics = ({ good, bad, neutral }) => {
+  const totalFeedback = good + bad + neutral
+  if (totalFeedback === 0) {
+    return (
+      <div>
+        <p>
+          No feedback yet received.
+        </p>
+      </div>
+    )
+  }
+
+  const averageFeedback = (good - bad) / totalFeedback
+  const positiveProportion = good / totalFeedback * 100
+  return (
+    <div>
+      <table>
+        <tbody>
+          <StatisticLine description={"Good:"} value={good} />
+          <StatisticLine description={"Neutral:"} value={neutral} />
+          <StatisticLine description={"Bad:"} value={bad} />
+          <StatisticLine description={"All:"} value={totalFeedback} />
+          <StatisticLine description={"Average:"} value={averageFeedback} />
+          <StatisticLine description={"Positive:"} value={positiveProportion} unit={"%"} />
+        </tbody>
+      </table>
+    </div>
+  )
+}
+
+const StatisticLine = ({ description, value, unit }) => (
+  <tr>
+    <td>
+      {description}
+    </td>
+    <td>
+      {value} {unit}
+    </td>
+  </tr>
 )
 
 const Button = ({ onClick, text }) => (
@@ -37,12 +70,10 @@ const App = () => {
     <div>
       <Header text={"Give feedback for Unicafe!"} />
       <Button onClick={incrementGoodFeedback} text={"Good"} />
-      <Button onClick={incrementBadFeedback} text={"Bad"} />
       <Button onClick={incrementNeutralFeedback} text={"Neutral"} />
+      <Button onClick={incrementBadFeedback} text={"Bad"} />
       <Header text={"Statistics"} />
-      <Statistics name={"good"} type={good} />
-      <Statistics name={"bad"} type={bad} />
-      <Statistics name={"neutral"} type={neutral} />
+      <Statistics good={good} bad={bad} neutral={neutral} />
     </div>
   )
 }
