@@ -1,6 +1,7 @@
 import React from 'react'
+import Country from './Country'
 
-const Countries = ({ countries }) => {
+const Countries = ({ countries, onSubmit }) => {
   const tooManyCountries = countries.length > 10
 
   if (tooManyCountries) {
@@ -13,9 +14,7 @@ const Countries = ({ countries }) => {
     return (
       <div>
         {countries.map(country => 
-        <p key={country.name}>
-          {country.name}
-        </p>)}
+        <Country key={country.name} country={country} onSubmit={onSubmit} />)}
       </div>
     )}
   }

@@ -6,7 +6,8 @@ import axios from 'axios'
 
 const App = () => {
   const [ countries, setCountries ] = useState([])
-  const [ countrySearch, setcountrySearch ] = useState('')
+  const [ countrySearch, setCountrySearch ] = useState('')
+  const [ showDetails, setShowDetails ] = useState(false)
 
   useEffect(() => {
     axios
@@ -17,13 +18,23 @@ const App = () => {
   }, [])
 
   const handleSearchChange = (event) => {
-    setcountrySearch(event.target.value)
+    setCountrySearch(event.target.value)
+  }
+
+  const showCountryDetails = (event) => {
+    event.preventDefault()
+    setCountrySearch(event.target.children[0].previousSibling.data)
   }
 
   const shownCountries = countries.filter(country => country.name.toLowerCase().includes(countrySearch.toLowerCase()))
 
-  const showDetails = shownCountries.length === 1
-  console.log('showdetails', showDetails)
+  if (shownCountries.length === 1 && !showDetails) {
+    setShowDetails(true)
+  }
+
+  if (shownCountries.length !== 1 && showDetails) {
+    setShowDetails(false)
+  }
 
   return (
     <div>
@@ -34,7 +45,7 @@ const App = () => {
       />
       {showDetails ?
       <CountryDetails country={shownCountries[0]} /> :
-      <Countries countries={shownCountries} />
+      <Countries countries={shownCountries} onSubmit={showCountryDetails} />
       } 
     </div>
   )
