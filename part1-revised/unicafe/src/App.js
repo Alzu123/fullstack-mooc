@@ -19,16 +19,20 @@ const FeedbackStats = ({ good, neutral, bad }) => {
   const average = (good - bad) / all
   const positive = good / all * 100 + ' %'
 
-  return (
-    <div>
-      <FeedbackDisplay text='good' value={good} />
-      <FeedbackDisplay text='neutral' value={neutral} />
-      <FeedbackDisplay text='bad' value={bad} />
-      <FeedbackDisplay text='all' value={all} />
-      <FeedbackDisplay text='average' value={average} />
-      <FeedbackDisplay text='positive' value={positive} />
-    </div>
-  )
+  if (all === 0) {
+    return 'No feedback given'
+  } else {
+    return (
+      <div>
+        <FeedbackDisplay text='good' value={good} />
+        <FeedbackDisplay text='neutral' value={neutral} />
+        <FeedbackDisplay text='bad' value={bad} />
+        <FeedbackDisplay text='all' value={all} />
+        <FeedbackDisplay text='average' value={average} />
+        <FeedbackDisplay text='positive' value={positive} />
+      </div>
+    )
+  }
 }
 
 const App = () => {
