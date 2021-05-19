@@ -11,7 +11,12 @@ const FeedbackButton = ({ handleClick, text }) => {
 }
 
 const FeedbackDisplay = ({ text, value }) => {
-  return <div>{text} {value}</div>
+  return (
+    <tr>
+      <td>{text}</td>
+      <td>{value}</td>
+    </tr>
+  )
 }
 
 const FeedbackStats = ({ good, neutral, bad }) => {
@@ -23,14 +28,16 @@ const FeedbackStats = ({ good, neutral, bad }) => {
     return 'No feedback given'
   } else {
     return (
-      <div>
-        <FeedbackDisplay text='good' value={good} />
-        <FeedbackDisplay text='neutral' value={neutral} />
-        <FeedbackDisplay text='bad' value={bad} />
-        <FeedbackDisplay text='all' value={all} />
-        <FeedbackDisplay text='average' value={average} />
-        <FeedbackDisplay text='positive' value={positive} />
-      </div>
+      <table>
+        <tbody>
+          <FeedbackDisplay text='good' value={good} />
+          <FeedbackDisplay text='neutral' value={neutral} />
+          <FeedbackDisplay text='bad' value={bad} />
+          <FeedbackDisplay text='all' value={all} />
+          <FeedbackDisplay text='average' value={average} />
+          <FeedbackDisplay text='positive' value={positive} />
+        </tbody>
+      </table>
     )
   }
 }
