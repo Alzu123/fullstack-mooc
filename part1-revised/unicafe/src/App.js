@@ -5,9 +5,7 @@ const Header = ({ text }) => {
 }
 
 const FeedbackButton = ({ handleClick, text }) => {
-  return <button onClick={handleClick}>
-    {text}
-  </button>
+  return <button onClick={handleClick}>{text}</button>
 }
 
 const FeedbackDisplay = ({ text, value }) => {
@@ -22,7 +20,8 @@ const FeedbackDisplay = ({ text, value }) => {
 const FeedbackStats = ({ good, neutral, bad }) => {
   const all = good + neutral + bad
   const average = (good - bad) / all
-  const positive = good / all * 100 + ' %'
+  const positive = good / all
+  const positivePercent = positive * 100 + ' %'
 
   if (all === 0) {
     return 'No feedback given'
@@ -35,7 +34,7 @@ const FeedbackStats = ({ good, neutral, bad }) => {
           <FeedbackDisplay text='bad' value={bad} />
           <FeedbackDisplay text='all' value={all} />
           <FeedbackDisplay text='average' value={average} />
-          <FeedbackDisplay text='positive' value={positive} />
+          <FeedbackDisplay text='positive' value={positivePercent} />
         </tbody>
       </table>
     )
