@@ -5,13 +5,7 @@ const Header = ({ text }) => {
 }
 
 const Button = ({ handleClick, text }) => {
-  return (
-    <div>
-      <button onClick={handleClick}>
-        {text}
-      </button>
-    </div>
-  )
+  return <button onClick={handleClick}>{text}</button>
 }
 
 const Anecdote = ({ text, votes }) => {
@@ -47,8 +41,7 @@ const App = () => {
     return () => setVotes(newVotes)
   }
 
-  const mostVotes = votes.findIndex(vote => vote === Math.max(...votes))
-  console.log(mostVotes)
+  const mostVotes = votes.indexOf(Math.max(...votes))
 
   return (
     <div>
@@ -56,7 +49,6 @@ const App = () => {
       <Anecdote text={anecdotes[selected]} votes={votes[selected]} />
       <Button handleClick={newVotes(selected)} text='vote' />
       <Button handleClick={() => setSelected(Math.floor(Math.random() * anecdotes.length))} text='next anecdote' />
-
       
       <Header text='Anecdote with most votes' />
       <Anecdote text={anecdotes[mostVotes]} votes={votes[mostVotes]} />
