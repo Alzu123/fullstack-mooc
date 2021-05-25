@@ -1,15 +1,11 @@
 import React from 'react'
 
-const Filter = ({ value, onChange}) => (
-  <form>
+const Filter = ({ onChange, value }) => {
+  return (
     <div>
-      Filter shown phonebook with
-      <input 
-        value={value}
-        onChange={onChange}
-      />
+      filter shown with: <input onChange={onChange} value={value}/>
     </div>
-  </form>
-)
+  )
+}
 
 export default Filter

@@ -1,75 +1,122 @@
 import React, { useState, useEffect } from 'react'
-import Persons from './components/Persons'
-import PersonForm from './components/PersonForm'
-import Filter from './components/Filter'
-
-import axios from 'axios'
+import Filter from './Components/Filter'
+import InputForm from './Components/InputForm'
+import Notification from './Components/Notification'
+import Numbers from './Components/Numbers'
+import personsService from './services/persons'
 
 const App = () => {
-  const [ persons, setPersons ] = useState([])
+  const [ persons, setPersons] = useState([]) 
   const [ newName, setNewName ] = useState('')
   const [ newNumber, setNewNumber ] = useState('')
-  const [ newFilter, setNewFilter ] = useState('')
+  const [ filter, setFilter ] = useState('')
+  const [ notificationMessage, setNotificationMessage ] = useState(null)
+  const [ notificationStatus, setNotificationStatus ] = useState(null)
+
+  const setTemporaryNotification = (message, time, isSuccess) => {
+    setNotificationMessage(message)
+    setNotificationStatus(isSuccess)
+    setTimeout(() => {
+      setNotificationMessage(null)
+      setNotificationStatus(null)
+    }, time)
+  }
 
   useEffect(() => {
-    console.log('effect')
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        console.log('promise fulfilled')
-        setPersons(response.data)
+    personsService
+      .getAll()
+      .then(initialPersons => {
+        setPersons(initialPersons)
       })
   }, [])
-  console.log('render', persons.length, 'persons')
 
   const addPerson = (event) => {
     event.preventDefault()
-    const personFound = persons.map(person => person.name).includes(newName)
-    if (personFound) {
-      alert(`${newName} is already found in phonebook!`)
-      return (null)
-    }
 
-    const person = {
+    const newPerson = {
       name: newName,
-      number: newNumber
+      number: newNumber,
     }
-    setPersons(persons.concat(person))
+    
+    const personWithSameName = persons.find(person => person.name.toLowerCase() === newName.toLowerCase())
 
-    setNewName('')
-    setNewNumber('')
+    if (personWithSameName) {
+      const updateConfirmed = window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)
+
+      if (updateConfirmed) {
+        personsService
+          .update(personWithSameName.id, newPerson)
+          .then(returnedPerson => {
+            setPersons(persons.map(person => person.id === personWithSameName.id ? returnedPerson : person))
+            setNewName('')
+            setNewNumber('')
+            setTemporaryNotification(`Updated the phone number of ${returnedPerson.name}`, 5000, true)
+          })
+          .catch(error => {
+            setTemporaryNotification(`Information of ${newName} has already been removed from server`, 5000, false)
+          })
+        return
+      } else {
+        setNewName('')
+        setNewNumber('')
+        return
+      }
+    }
+
+    personsService
+      .create(newPerson)
+      .then(returnedPerson => {
+        setPersons(persons.concat(returnedPerson))
+        setNewNumber('')
+        setNewName('')
+        setTemporaryNotification(`Added ${returnedPerson.name}`, 5000, true)
+      })
+      .catch(error => {
+        setTemporaryNotification(`Could not add ${newPerson} to server`, 5000, false)
+      })
   }
 
-  const handleNameChange = (event) => {
+  const handleNameChange = event => {
     setNewName(event.target.value)
   }
 
-  const handleNumberChange = (event) => {
+  const handleNumberChange = event => {
     setNewNumber(event.target.value)
   }
 
-  const handleFilterChange = (event) => {
-    setNewFilter(event.target.value)
+  const handleFilterChange = event => {
+    setFilter(event.target.value)
   }
 
-  const shownPersons = persons.filter(person => person.name.toLowerCase().includes(newFilter.toLowerCase()))
+  const removePerson = id => {
+    const personToRemove = persons.find(person => person.id === id)
+    const removalConfirmed = window.confirm(`Delete ${personToRemove.name}?`)
+    if (removalConfirmed) {
+      personsService
+        .remove(id)
+        .then(() => {
+          setPersons(persons.filter(person => person.id !== id))
+          setTemporaryNotification(`Removed ${personToRemove.name} from the phone book`, 5000, true)
+        })
+        .catch(error => {
+          setTemporaryNotification(`Failed to remove ${personToRemove.name} from the phone book`, 5000, false)
+        })
+    }
+
+    return
+  }
 
   return (
     <div>
       <h2>Phonebook</h2>
-      <Filter value={newFilter} onChange={handleFilterChange} />
+      <Notification message={notificationMessage} isSuccess={notificationStatus} />
+      <Filter onChange={handleFilterChange} value={filter} />
 
-      <h2>Add a new person</h2>
-      <PersonForm
-        onSubmit={addPerson}
-        newName={newName}
-        handleNameChange={handleNameChange}
-        newNumber={newNumber}
-        handleNumberChange={handleNumberChange}
-      />
+      <h3>Add a new</h3>
+      <InputForm onSubmit={addPerson} onNameChange={handleNameChange} nameValue={newName} onNumberChange={handleNumberChange} numberValue={newNumber}/>
 
-      <h2>Numbers</h2>
-      <Persons persons={shownPersons} />
+      <h3>Numbers</h3>
+      <Numbers persons={persons} filter={filter} removePerson={removePerson} />
     </div>
   )
 
