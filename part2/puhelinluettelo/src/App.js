@@ -53,7 +53,12 @@ const App = () => {
             setTemporaryNotification(`Updated the phone number of ${returnedPerson.name}`, 5000, true)
           })
           .catch(error => {
-            setTemporaryNotification(`Information of ${newName} has already been removed from server`, 5000, false)
+            if (error.response.status === 400) {
+              console.log(error.response)
+              setTemporaryNotification(error.response.data.error, 5000, false)
+            } else {
+              setTemporaryNotification(`Information of ${newName} has already been removed from server`, 5000, false)
+            }
           })
         return
       } else {
@@ -72,7 +77,11 @@ const App = () => {
         setTemporaryNotification(`Added ${returnedPerson.name}`, 5000, true)
       })
       .catch(error => {
-        setTemporaryNotification(`Could not add ${newPerson} to server`, 5000, false)
+        if (error.response.status === 400) {
+          setTemporaryNotification(error.response.data.error, 5000, false)
+        } else {
+          setTemporaryNotification(`Could not add ${newPerson.name} to server`, 5000, false)
+        }
       })
   }
 
