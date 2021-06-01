@@ -97,6 +97,50 @@ test('a blog without url cannot be added', async () => {
   expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
 })
 
+test('a blog can be deleted', async () => {
+  const blogsAtStart = await helper.blogsInDb()
+  const blogToDelete = blogsAtStart[0]
+
+  await api
+    .delete(`/api/blogs/${blogToDelete.id}`)
+    .expect(204)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  expect(blogsAtEnd).toHaveLength(
+    blogsAtStart.length - 1
+  )
+
+  const titlesAtEnd = blogsAtEnd.map(blog => blog.title)
+  expect(titlesAtEnd).not.toContain(blogToDelete.title)
+})
+
+test.only('an edited blog has new info', async () => {
+  const newBlog = {
+    title: 'testing cool db',
+    author: 'NL',
+    url: 'http://www.fullstackopen.com',
+    likes: 12345
+  }
+
+  const blogsAtStart = await helper.blogsInDb()
+  const blogToEdit = blogsAtStart[0]
+
+  await api
+    .put(`/api/blogs/${blogToEdit.id}`)
+    .send(newBlog)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  expect(blogsAtEnd).toHaveLength(blogsAtStart.length)
+
+  const titlesAtEnd = blogsAtEnd.map(blog => blog.title)
+  expect(titlesAtEnd).toContain(newBlog.title)
+
+  const originalId = blogToEdit.id
+  expect(blogsAtEnd[0].id).toBe(originalId)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
