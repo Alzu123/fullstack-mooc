@@ -1,9 +1,10 @@
 POST http://localhost:3003/api/blogs
 Content-Type: application/json
+Authorization: bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InR5eXBwaSIsImlkIjoiNjBjMGUzNjVjZGE0ODcwZWQwN2Y4ZTcwIiwiaWF0IjoxNjIzMjU0MzczfQ.nvT04PQjASwen_Bht45lDqVeiZI9ODutmlj_I5TbtTk
 
 {
-  "title": "Pekka Töpöhännän valheet",
-  "author": "Monni",
-  "url": "http://www.kissakala.fi",
+  "title": "Tyypin hieno bloki",
+  "author": "adwewew",
+  "url": "http://www.kissakaasdasla.fi",
   "likes": 100
 }

@@ -1,3 +1,5 @@
+const User = require('../models/user')
+const jwt = require('jsonwebtoken')
 const logger = require('./logger')
 
 const requestLogger = (request, response, next) => {
@@ -24,8 +26,33 @@ const errorHandler = (error, request, response, next) => {
   next(error)
 }
 
+const tokenExtractor = (request, response, next) => {
+  const authorization = request.get('authorization')
+  if (authorization && authorization.toLowerCase().startsWith('bearer ')) {
+    request.token = authorization.substring(7)
+  }
+
+  next()
+}
+
+// Mustn't be run without a token, i.e. when authorization hasn't been provided in the http request
+const userExtractor = async (request, response, next) => {
+  if (!request.token) {
+    return response.status(401).json({ error: 'token missing' })
+  }
+  const decodedToken = jwt.verify(request.token, process.env.SECRET)
+  if (!decodedToken.id) {
+    return response.status(401).json({ error: 'token invalid' })
+  }
+  request.user = await User.findById(decodedToken.id)
+
+  next()
+}
+
 module.exports = {
   requestLogger,
   unknownEndpoint,
-  errorHandler
+  errorHandler,
+  tokenExtractor,
+  userExtractor
 }
