@@ -25,7 +25,7 @@ const App = () => {
   }
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>{
+    blogService.getAll().then(blogs => {
       const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes)
       setBlogs(sortedBlogs)
     })
@@ -77,7 +77,7 @@ const App = () => {
         setBlogs(blogs.concat(returnedBlog))
         setTemporaryNotification(`a new blog '${returnedBlog.title}' by ${returnedBlog.author} added`, 5000, true)
       })
-      .catch(error => {
+      .catch(() => {
         setTemporaryNotification('failed to add the blog to the database', 5000, false)
       })
   }
@@ -88,8 +88,8 @@ const App = () => {
       .then(returnedBlog => {
         setBlogs(blogs.map(b => b.id === returnedBlog.id ? returnedBlog : b).sort((a, b) => b.likes - a.likes))
       })
-      .catch(error => {
-        setTemporaryNotification(`failed to add like`, 5000, false)
+      .catch(() => {
+        setTemporaryNotification('failed to add like', 5000, false)
       })
   }
 
@@ -100,8 +100,8 @@ const App = () => {
         setBlogs(blogs.filter(blog => blog.id !== blogToRemove.id))
         setTemporaryNotification(`removed blog ${blogToRemove.title}`, 5000, true)
       })
-      .catch(error => {
-        setTemporaryNotification(`failed to remove blog`, 5000, false)
+      .catch(() => {
+        setTemporaryNotification('failed to remove blog', 5000, false)
       })
   }
 
@@ -109,7 +109,7 @@ const App = () => {
     <form onSubmit={handleLogin}>
       <div>
         username
-          <input
+        <input
           type="text"
           value={username}
           name="Username"
@@ -118,7 +118,7 @@ const App = () => {
       </div>
       <div>
         password
-          <input
+        <input
           type="password"
           value={password}
           name="Password"
@@ -148,9 +148,9 @@ const App = () => {
     if (tempMessage === null) {
       return null
     }
-  
+
     const notificationType = tempStatus ? 'notification' : 'notification warning'
-  
+
     return (
       <div className={notificationType}>
         {tempMessage}

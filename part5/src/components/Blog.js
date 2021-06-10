@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 
 const Blog = ({ blog, incrementLike, removeBlog, user }) => {
   const [isMinimized, setIsMinimized] = useState(true)
@@ -6,7 +7,7 @@ const Blog = ({ blog, incrementLike, removeBlog, user }) => {
   const hideWhenMinimized = { display: isMinimized ? 'none' : '' }
   const showWhenMinimized = { display: isMinimized ? '' : 'none' }
 
-  const showWhenFromUser = { display: blog.user[0] ? blog.user[0].username === user.username : false ? '' : 'none' }
+  const showWhenFromUser = { display: blog.user[0] ? blog.user[0].username === user.username ? '' : 'none' : 'none' }
 
   const blogStyle = {
     paddingTop: 10,
@@ -19,7 +20,7 @@ const Blog = ({ blog, incrementLike, removeBlog, user }) => {
   const toggleVisibility = () => {
     setIsMinimized(!isMinimized)
   }
-  
+
   const handleLikeIncrement = () => {
     const updatedBlog = {
       ...blog,
@@ -38,7 +39,7 @@ const Blog = ({ blog, incrementLike, removeBlog, user }) => {
 
   return (
     <div style={blogStyle}>
-      <div style={showWhenMinimized}> 
+      <div style={showWhenMinimized}>
         {blog.title} {blog.author} <button onClick={toggleVisibility}>view</button>
       </div>
 
@@ -51,6 +52,13 @@ const Blog = ({ blog, incrementLike, removeBlog, user }) => {
       </div>
     </div>
   )
+}
+
+Blog.propTypes = {
+  blog: PropTypes.object.isRequired,
+  incrementLike: PropTypes.func.isRequired,
+  removeBlog: PropTypes.func.isRequired,
+  user: PropTypes.object.isRequired
 }
 
 export default Blog
