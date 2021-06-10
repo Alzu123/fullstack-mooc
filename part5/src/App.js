@@ -25,9 +25,10 @@ const App = () => {
   }
 
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
+    blogService.getAll().then(blogs =>{
+      const sortedBlogs = blogs.sort((a, b) => b.likes - a.likes)
+      setBlogs(sortedBlogs)
+    })
   }, [])
 
   useEffect(() => {
@@ -78,6 +79,29 @@ const App = () => {
       })
       .catch(error => {
         setTemporaryNotification('failed to add the blog to the database', 5000, false)
+      })
+  }
+
+  const incrementLike = (updatedBlog) => {
+    blogService
+      .update(updatedBlog)
+      .then(returnedBlog => {
+        setBlogs(blogs.map(b => b.id === returnedBlog.id ? returnedBlog : b).sort((a, b) => b.likes - a.likes))
+      })
+      .catch(error => {
+        setTemporaryNotification(`failed to add like`, 5000, false)
+      })
+  }
+
+  const removeBlog = (blogToRemove) => {
+    blogService
+      .remove(blogToRemove)
+      .then(() => {
+        setBlogs(blogs.filter(blog => blog.id !== blogToRemove.id))
+        setTemporaryNotification(`removed blog ${blogToRemove.title}`, 5000, true)
+      })
+      .catch(error => {
+        setTemporaryNotification(`failed to remove blog`, 5000, false)
       })
   }
 
@@ -153,7 +177,7 @@ const App = () => {
       {blogForm()}
 
       {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} incrementLike={incrementLike} removeBlog={removeBlog} user={user}/>
       )}
     </div>
   )
