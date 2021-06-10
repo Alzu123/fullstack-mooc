@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import BlogForm from './components/BlogForm'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
-  const [blogTitle, setBlogTitle] = useState('')
-  const [blogAuthor, setBlogAuthor] = useState('')
-  const [blogUrl, setBlogUrl] = useState('')
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -70,25 +69,12 @@ const App = () => {
     setTemporaryNotification('logged out', 5000, true)
   }
 
-  const handleBlogAddition = (event) => {
-    event.preventDefault()
-
-    const newBlog = {
-      title: blogTitle,
-      author: blogAuthor,
-      url: blogUrl,
-    }
-
+  const handleBlogAddition = (newBlog) => {
     blogService
       .create(newBlog)
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
-
         setTemporaryNotification(`a new blog '${returnedBlog.title}' by ${returnedBlog.author} added`, 5000, true)
-
-        setBlogTitle('')
-        setBlogAuthor('')
-        setBlogUrl('')
       })
       .catch(error => {
         setTemporaryNotification('failed to add the blog to the database', 5000, false)
@@ -127,37 +113,9 @@ const App = () => {
   )
 
   const blogForm = () => (
-    <form onSubmit={handleBlogAddition}>
-    <div>
-      title:
-        <input
-        type="text"
-        value={blogTitle}
-        name="Blog Title"
-        onChange={({ target }) => setBlogTitle(target.value)}
-      />
-    </div>
-    <div>
-      author:
-        <input
-        type="text"
-        value={blogAuthor}
-        name="Blog Author"
-        onChange={({ target }) => setBlogAuthor(target.value)}
-      />
-    </div>
-    <div>
-      url:
-        <input
-        type="text"
-        value={blogUrl}
-        name="Blog URL"
-        onChange={({ target }) => setBlogUrl(target.value)}
-      />
-    </div>
-    <button type="submit">create</button>
-
-    </form>
+    <Togglable buttonLabel='create new blog'>
+      <BlogForm createBlog={handleBlogAddition}/>
+    </Togglable>
   )
 
   const messageBanner = () => {
