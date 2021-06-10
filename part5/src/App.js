@@ -13,6 +13,18 @@ const App = () => {
   const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
+  const [tempMessage, setTempMessage] = useState(null)
+  const [tempStatus, setTempStatus] = useState(null)
+
+  const setTemporaryNotification = (message, time, isSuccess) => {
+    setTempMessage(message)
+    setTempStatus(isSuccess)
+    setTimeout(() => {
+      setTempMessage(null)
+      setTempStatus(null)
+    }, time)
+  }
+
   useEffect(() => {
     blogService.getAll().then(blogs =>
       setBlogs( blogs )
@@ -44,7 +56,9 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+      setTemporaryNotification('logged in', 5000, true)
     } catch (exception) {
+      setTemporaryNotification('wrong username or password', 5000, false)
     }
   }
 
@@ -53,6 +67,7 @@ const App = () => {
 
     window.localStorage.removeItem('loggedUser')
     setUser(null)
+    setTemporaryNotification('logged out', 5000, true)
   }
 
   const handleBlogAddition = (event) => {
@@ -68,9 +83,15 @@ const App = () => {
       .create(newBlog)
       .then(returnedBlog => {
         setBlogs(blogs.concat(returnedBlog))
+
+        setTemporaryNotification(`a new blog '${returnedBlog.title}' by ${returnedBlog.author} added`, 5000, true)
+
         setBlogTitle('')
         setBlogAuthor('')
         setBlogUrl('')
+      })
+      .catch(error => {
+        setTemporaryNotification('failed to add the blog to the database', 5000, false)
       })
   }
 
@@ -139,10 +160,25 @@ const App = () => {
     </form>
   )
 
+  const messageBanner = () => {
+    if (tempMessage === null) {
+      return null
+    }
+  
+    const notificationType = tempStatus ? 'notification' : 'notification warning'
+  
+    return (
+      <div className={notificationType}>
+        {tempMessage}
+      </div>
+    )
+  }
+
   if (user === null) {
     return (
       <div>
         <h2>Log in to application</h2>
+        {messageBanner()}
         {loginForm()}
       </div>
     )
@@ -151,7 +187,8 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
-      <p>{logoutForm()}</p>
+      {messageBanner()}
+      {logoutForm()}
 
       <h2>create new</h2>
       {blogForm()}
