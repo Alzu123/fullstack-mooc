@@ -107,8 +107,10 @@ const App = () => {
 
   const logoutForm = () => (
     <form onSubmit={handleLogout}>
-      {`${user.name} logged in`}
-      <button type='submit'>logout</button>
+      <p>
+        {user.name} logged in
+        <button type='submit'>logout</button>
+      </p>
     </form>
   )
 
@@ -148,7 +150,6 @@ const App = () => {
       {messageBanner()}
       {logoutForm()}
 
-      <h2>create new</h2>
       {blogForm()}
 
       {blogs.map(blog =>
