@@ -1,28 +1,56 @@
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
-import { render } from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react'
 import Blog from './Blog'
 
-test('<Blog /> renders small info at first', () => {
-  const blog = {
-    title: 'Testiblogi',
-    author: 'Minä',
-    url: 'kissakala',
-    likes: 100,
-    user: ''
-  }
+describe('<Blog />', () => {
+  let component
+  let mockIncrementLike
 
-  const mockLikeIncrementer = jest.fn()
+  beforeEach(() => {
+    const blog = {
+      title: 'Testiblogi',
+      author: 'Minä',
+      url: 'kissakala',
+      likes: 100,
+      user: ''
+    }
 
-  const component = render(
-    <Blog blog={blog} incrementLike={mockLikeIncrementer} />
-  )
+    mockIncrementLike = jest.fn()
 
-  const smallInfo = component.container.querySelector('.small-info')
-  const allInfo = component.container.querySelector('.all-info')
-  const removeButton = component.getByText('remove')
+    component = render(
+      <Blog blog={blog} incrementLike={mockIncrementLike} />
+    )
+  })
 
-  expect(smallInfo).not.toHaveStyle('display: none')
-  expect(allInfo).toHaveStyle('display: none')
-  expect(removeButton).toHaveStyle('display: none')
+  test('renders only small info at first', () => {
+    const smallInfo = component.container.querySelector('.small-info')
+    const allInfo = component.container.querySelector('.all-info')
+
+    expect(smallInfo).not.toHaveStyle('display: none')
+    expect(allInfo).toHaveStyle('display: none')
+  })
+
+  test('all info is shown after clicking view', () => {
+    const smallInfo = component.container.querySelector('.small-info')
+    const allInfo = component.container.querySelector('.all-info')
+
+    const showButton = component.getByText('view')
+    fireEvent.click(showButton)
+
+    expect(smallInfo).toHaveStyle('display: none')
+    expect(allInfo).not.toHaveStyle('display: none')
+  })
+
+  test('2 like button calls like incrementer twice', () => {
+    const showButton = component.getByText('view')
+    fireEvent.click(showButton)
+
+    const likeButton = component.getByText('like')
+    fireEvent.click(likeButton)
+    fireEvent.click(likeButton)
+
+    expect(mockIncrementLike.mock.calls).toHaveLength(2)
+  })
+
 })
