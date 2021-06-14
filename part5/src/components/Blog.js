@@ -45,15 +45,15 @@ const Blog = ({ blog, incrementLike, removeBlog, user }) => {
   return (
     <div style={blogStyle}>
       <div style={showWhenMinimized} className='small-info'>
-        {blog.title} {blog.author} <button onClick={toggleVisibility}>view</button>
+        {blog.title} {blog.author} <button onClick={toggleVisibility} id='view-blog'>view</button>
       </div>
 
       <div style={hideWhenMinimized} className='all-info'>
-        <div>{blog.title} {blog.author} <button onClick={toggleVisibility}>hide</button></div>
+        <div>{blog.title} {blog.author} <button onClick={toggleVisibility} id='hide-blog'>hide</button></div>
         <div>{blog.url}</div>
-        <div>likes {blog.likes} <button onClick={handleLikeIncrement}>like</button></div>
+        <div>likes {blog.likes} <button onClick={handleLikeIncrement} id='like-blog'>like</button></div>
         <div>{blog.user[0] ? blog.user[0].name: ''}</div>
-        <button onClick={handleRemoveBlog} style={showWhenFromUser}>remove</button>
+        <button onClick={handleRemoveBlog} style={showWhenFromUser} id='remove'>remove</button>
       </div>
     </div>
   )

@@ -113,6 +113,7 @@ const App = () => {
           type="text"
           value={username}
           name="Username"
+          id="username-field"
           onChange={({ target }) => setUsername(target.value)}
         />
       </div>
@@ -122,10 +123,11 @@ const App = () => {
           type="password"
           value={password}
           name="Password"
+          id="password-field"
           onChange={({ target }) => setPassword(target.value)}
         />
       </div>
-      <button type="submit">login</button>
+      <button type="submit" id='login-button'>login</button>
     </form>
   )
 
@@ -133,7 +135,7 @@ const App = () => {
     <form onSubmit={handleLogout}>
       <p>
         {user.name} logged in
-        <button type='submit'>logout</button>
+        <button type='submit' id='logout-button'>logout</button>
       </p>
     </form>
   )

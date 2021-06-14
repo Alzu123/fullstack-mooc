@@ -23,3 +23,42 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite('visit', (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('login', ({ username, password }) => {
+  cy.request('POST', 'http://localhost:3003/api/login', {
+    username, password
+  }).then(({ body }) => {
+    localStorage.setItem('loggedUser', JSON.stringify(body))
+    cy.visit('http://localhost:3000')
+  })
+})
+
+Cypress.Commands.add('createBlog', ({ title, author, url }) => {
+  cy.request({
+    url: 'http://localhost:3003/api/blogs',
+    method: 'POST',
+    body: { title, author, url },
+    headers: {
+      'Authorization': `bearer ${JSON.parse(localStorage.getItem('loggedUser')).token}`
+    }
+  })
+
+  cy.visit('http://localhost:3000')
+})
+
+Cypress.Commands.add('likeBlogByTitle', (title) => {
+  cy.get('.small-info').contains(title).find('#view-blog').click()
+  cy.get('.all-info').contains(title).parent().find('#like-blog').click()
+  cy.get('.all-info').contains(title).parent().find('#hide-blog').click()
+})
+
+Cypress.Commands.add('isBlogOrderCorrect', (expectedOrder) => {
+  cy.get('.all-info').then(blogs => {
+    for (let i = 0; i < expectedOrder.length; i++) {
+      if (!blogs[i].innerText.includes(expectedOrder[i])) {
+        return false
+      }
+    }
+    return true
+  })
+})
