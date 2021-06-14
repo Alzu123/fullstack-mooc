@@ -7,7 +7,12 @@ const Blog = ({ blog, incrementLike, removeBlog, user }) => {
   const hideWhenMinimized = { display: isMinimized ? 'none' : '' }
   const showWhenMinimized = { display: isMinimized ? '' : 'none' }
 
-  const showWhenFromUser = { display: blog.user[0] ? blog.user[0].username === user.username ? '' : 'none' : 'none' }
+  let showWhenFromUser
+  if (!user || !blog.user[0]) {
+    showWhenFromUser = { display: 'none' }
+  } else {
+    showWhenFromUser = { display: blog.user[0].username === user.username ? '' : 'none' }
+  }
 
   const blogStyle = {
     paddingTop: 10,
@@ -39,16 +44,16 @@ const Blog = ({ blog, incrementLike, removeBlog, user }) => {
 
   return (
     <div style={blogStyle}>
-      <div style={showWhenMinimized}>
+      <div style={showWhenMinimized} className='small-info'>
         {blog.title} {blog.author} <button onClick={toggleVisibility}>view</button>
       </div>
 
-      <div style={hideWhenMinimized}>
+      <div style={hideWhenMinimized} className='all-info'>
         <div>{blog.title} {blog.author} <button onClick={toggleVisibility}>hide</button></div>
         <div>{blog.url}</div>
         <div>likes {blog.likes} <button onClick={handleLikeIncrement}>like</button></div>
         <div>{blog.user[0] ? blog.user[0].name: ''}</div>
-        <div style={showWhenFromUser}><button onClick={handleRemoveBlog}>remove</button></div>
+        <button onClick={handleRemoveBlog} style={showWhenFromUser}>remove</button>
       </div>
     </div>
   )
@@ -57,8 +62,6 @@ const Blog = ({ blog, incrementLike, removeBlog, user }) => {
 Blog.propTypes = {
   blog: PropTypes.object.isRequired,
   incrementLike: PropTypes.func.isRequired,
-  removeBlog: PropTypes.func.isRequired,
-  user: PropTypes.object.isRequired
 }
 
 export default Blog
