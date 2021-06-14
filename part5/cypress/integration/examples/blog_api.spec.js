@@ -109,7 +109,7 @@ describe('Blog app', function() {
         cy.createBlog({ title: 'fourth title', author: 'fourth author', url: 'fourth url' })
       })
 
-      it.only('blogs are sorted by decending likes', function() {
+      it('blogs are sorted by decending likes', function() {
         cy.likeBlogByTitle('third title')
 
         let expectedOrder = ['third', 'first', 'second', 'fourth']

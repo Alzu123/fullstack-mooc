@@ -53,7 +53,7 @@ const Blog = ({ blog, incrementLike, removeBlog, user }) => {
         <div>{blog.url}</div>
         <div>likes {blog.likes} <button onClick={handleLikeIncrement} id='like-blog'>like</button></div>
         <div>{blog.user[0] ? blog.user[0].name: ''}</div>
-        <button onClick={handleRemoveBlog} style={showWhenFromUser} id='remove'>remove</button>
+        <button onClick={handleRemoveBlog} style={showWhenFromUser} id='remove-blog'>remove</button>
       </div>
     </div>
   )
