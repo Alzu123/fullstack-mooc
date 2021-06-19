@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { useDispatch } from 'react-redux'
-import { removeBlog } from '../reducers/blogReducer'
+import { likeBlog, removeBlog } from '../reducers/blogReducer'
 
-const Blog = ({ blog, incrementLike, user }) => {
+const Blog = ({ blog, user }) => {
   const [isMinimized, setIsMinimized] = useState(true)
 
   const dispatch = useDispatch()
@@ -31,19 +31,13 @@ const Blog = ({ blog, incrementLike, user }) => {
   }
 
   const handleLikeIncrement = () => {
-    const updatedBlog = {
-      ...blog,
-      likes: blog.likes + 1
-    }
-
-    incrementLike(updatedBlog)
+    dispatch(likeBlog(blog.id))
   }
 
   const handleRemoveBlog = () => {
     const isRemovalConfirmed = window.confirm(`Remove blog '${blog.title}' by ${blog.author}?`)
     if (isRemovalConfirmed) {
-      //removeBlog(blog)
-      dispatch(removeBlog(blog))
+      dispatch(removeBlog(blog.id))
     }
   }
 
@@ -65,8 +59,7 @@ const Blog = ({ blog, incrementLike, user }) => {
 }
 
 Blog.propTypes = {
-  blog: PropTypes.object.isRequired,
-  incrementLike: PropTypes.func.isRequired,
+  blog: PropTypes.object.isRequired
 }
 
 export default Blog

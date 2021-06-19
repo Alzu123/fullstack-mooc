@@ -1,62 +1,58 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useDispatch } from 'react-redux'
 import { createBlog } from '../reducers/blogReducer'
+import Togglable from './Togglable'
 
 const BlogForm = () => {
-  const [title, setTitle] = useState('')
-  const [author, setAuthor] = useState('')
-  const [url, setUrl] = useState('')
-
   const dispatch = useDispatch()
 
   const handleBlogAddition = async event => {
     event.preventDefault()
+    const blog = {
+      title: event.target.title.value,
+      author: event.target.author.value,
+      url: event.target.url.value
+    }
 
-    dispatch(createBlog({ title, author, url }))
+    dispatch(createBlog(blog))
 
-    setTitle('')
-    setAuthor('')
-    setUrl('')
+    event.target.title.value = ''
+    event.target.author.value = ''
+    event.target.url.value = ''
   }
 
   return (
-    <div>
+    <Togglable buttonLabel='create new blog'>
       <h2>create new</h2>
 
       <form onSubmit={handleBlogAddition} id='blog-form'>
         <div>
           title:
           <input
-            type="text"
+            type='text'
             id='title'
-            value={title}
-            name="Blog Title"
-            onChange={({ target }) => setTitle(target.value)}
+            name='title'
           />
         </div>
         <div>
           author:
           <input
-            type="text"
+            type='text'
             id='author'
-            value={author}
-            name="Blog Author"
-            onChange={({ target }) => setAuthor(target.value)}
+            name='author'
           />
         </div>
         <div>
           url:
           <input
-            type="text"
+            type='text'
             id='url'
-            value={url}
-            name="Blog URL"
-            onChange={({ target }) => setUrl(target.value)}
+            name='url'
           />
         </div>
-        <button type="submit">create</button>
+        <button type='submit'>create</button>
       </form>
-    </div>
+    </Togglable>
   )
 }
 
