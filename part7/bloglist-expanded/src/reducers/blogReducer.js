@@ -1,4 +1,5 @@
 import blogService from '../services/blogs'
+import commentsService from '../services/comments'
 import { setNotification } from './notificationReducer'
 
 const blogReducer = (state = [], action) => {
@@ -11,6 +12,8 @@ const blogReducer = (state = [], action) => {
     return state.filter(blog => blog.id !== action.id)
   case 'VOTE_BLOG':
     return state.map(blog => blog.id === action.data.id ? action.data : blog)
+  case 'ADD_COMMENT_TO_BLOG':
+    return state.map(blog => blog.id === action.id ? action.data : blog)
   default:
     return state
   }
@@ -61,6 +64,22 @@ export const likeBlog = id => {
     dispatch({
       type: 'VOTE_BLOG',
       data: returnedBlog
+    })
+  }
+}
+
+export const createComment = (blog, comment) => {
+  return async dispatch => {
+    const addedComment = await commentsService.create(blog.id, comment)
+    const modifiedBlog = {
+      ...blog,
+      comments: [...blog.comments, addedComment]
+    }
+    console.log(addedComment, modifiedBlog)
+    dispatch({
+      type: 'ADD_COMMENT_TO_BLOG',
+      id: blog.id,
+      data: modifiedBlog
     })
   }
 }
