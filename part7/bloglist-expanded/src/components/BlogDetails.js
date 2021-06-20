@@ -11,13 +11,15 @@ const BlogDetails = () => {
   const blog = blogs.find(b => b.id === blogId)
 
   const user = useSelector(state => state.user)
-  const isFromUser = (user && blog) ? user.id === blog.user[0].id : false
+  const isFromUser = (user && blog) ? user.id === blog.user.id : false
   const showWhenFromUser = { display: isFromUser ? '' : 'none' }
 
   if (!blog) {
     return null
   }
 
+  const comments = blog.comments
+  console.log(blog)
   const handleLikeIncrement = () => {
     dispatch(likeBlog(blog.id))
   }
@@ -37,8 +39,17 @@ const BlogDetails = () => {
         likes {blog.likes}
         <button onClick={handleLikeIncrement} id='like-blog'>like</button>
       </div>
-      <div>{blog.user[0] ? blog.user[0].name: ''}</div>
+      <div>added by {blog.user.name}</div>
       <button onClick={handleRemoveBlog} style={showWhenFromUser} id='remove-blog'>remove</button>
+
+      <h3>comments</h3>
+      <ul>
+        {comments.map(comment =>
+          <li key={comment.id}>
+            {comment.content}
+          </li>
+        )}
+      </ul>
     </div>
   )
 }

@@ -13,7 +13,6 @@ const userReducer = (state = null, action) => {
 
 export const setUser = user => {
   return async dispatch => {
-    console.log('set', user)
     dispatch({
       type: 'SET_USER',
       user
@@ -28,8 +27,6 @@ export const login = (username, password) => {
     window.localStorage.setItem(
       'loggedUser', JSON.stringify(user)
     )
-
-    console.log('login', user)
 
     dispatch({
       type: 'SET_USER',

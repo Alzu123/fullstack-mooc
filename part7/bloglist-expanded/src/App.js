@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
+import Navigation from './components/Navigation'
 import BlogList from './components/BlogList'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
-import LogoutForm from './components/LogoutForm'
 import User from './components/User'
 import UserList from './components/UserList'
 import blogService from './services/blogs'
@@ -11,7 +11,7 @@ import { initializeBlogs } from './reducers/blogReducer'
 import { setUser } from './reducers/userReducer'
 import {
   BrowserRouter as Router,
-  Switch, Route, Link
+  Switch, Route
 } from 'react-router-dom'
 import { initializeUsers } from './reducers/usersReducer'
 import BlogDetails from './components/BlogDetails'
@@ -36,10 +36,6 @@ const App = () => {
     }
   }, [])
 
-  const padding = {
-    padding: 5
-  }
-
   if (user === null) {
     return (
       <div>
@@ -52,12 +48,7 @@ const App = () => {
 
   return (
     <Router>
-      <div>
-        <Link style={padding} to="/">home</Link>
-        <Link style={padding} to="/users">users</Link>
-        <LogoutForm />
-      </div>
-
+      <Navigation />
       <Notification />
 
       <Switch>
