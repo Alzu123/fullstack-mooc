@@ -1,7 +1,7 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { login } from '../reducers/userReducer'
-import { TextField, Button, Typography } from '@material-ui/core'
+import { TextField, Button } from '@material-ui/core'
 
 const LoginForm = () => {
   const dispatch = useDispatch()
@@ -17,9 +17,6 @@ const LoginForm = () => {
 
   return (
     <form onSubmit={handleLogin}>
-      <Typography variant="h3" gutterBottom>
-        Log in to application
-      </Typography>
       <div>
         <TextField
           id='username'

@@ -1,7 +1,7 @@
 import React from 'react'
 import Blog from './Blog'
 
-import { TableContainer, Table, TableHead, TableRow, TableCell } from '@material-ui/core'
+import { TableContainer, Table, TableHead, TableBody, TableRow, TableCell } from '@material-ui/core'
 
 const BlogList = ({ blogs, user }) => {
   return (
@@ -18,9 +18,11 @@ const BlogList = ({ blogs, user }) => {
               </TableCell>
             </TableRow>
           </TableHead>
-          {blogs.map(blog =>
-            <Blog key={blog.id} blog={blog} user={user}/>
-          )}
+          <TableBody>
+            {blogs.map(blog =>
+              <Blog key={blog.id} blog={blog} user={user}/>
+            )}
+          </TableBody>
         </Table>
       </TableContainer>
     </div>

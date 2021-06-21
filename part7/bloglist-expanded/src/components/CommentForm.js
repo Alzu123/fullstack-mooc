@@ -26,7 +26,7 @@ const CommentForm = ({ blog }) => {
           label='Comment'
         />
       </div>
-      <Button variant='contained'type='submit'>add comment</Button>
+      <Button variant='contained' type='submit'>add comment</Button>
     </form>
   )
 }

@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import { likeBlog, removeBlog } from '../reducers/blogReducer'
 import CommentForm from './CommentForm'
-import { Typography, List, ListItem, ListItemText, TableContainer, Table, TableRow, TableCell } from '@material-ui/core'
+import { Typography, List, ListItem, ListItemText, TableContainer, Table, TableRow, TableCell, Button, TableBody } from '@material-ui/core'
 
 const BlogDetails = () => {
   const dispatch = useDispatch()
@@ -28,7 +28,7 @@ const BlogDetails = () => {
   const handleRemoveBlog = () => {
     const isRemovalConfirmed = window.confirm(`Remove blog '${blog.title}' by ${blog.author}?`)
     if (isRemovalConfirmed) {
-      dispatch(removeBlog(blog.id))
+      dispatch(removeBlog(blog))
     }
   }
 
@@ -40,19 +40,19 @@ const BlogDetails = () => {
       <List>
         <ListItem>
           <ListItemText>
-            <a href={blog.url}>{blog.url}</a>
+            Address: <a href={blog.url}>{blog.url}</a>
           </ListItemText>
         </ListItem>
         <ListItem>
           <ListItemText>
-            Likes: {blog.likes}
-            <button onClick={handleLikeIncrement} id='like-blog'>like</button>
+            <div>Likes: {blog.likes}</div>
+            <Button variant='contained' onClick={handleLikeIncrement} id='like-blog'>like</Button>
           </ListItemText>
         </ListItem>
         <ListItem>
           <ListItemText>
             <div>Added by {blog.user.name}</div>
-            <button onClick={handleRemoveBlog} style={showWhenFromUser} id='remove-blog'>remove</button>
+            <Button variant='contained' onClick={handleRemoveBlog} style={showWhenFromUser} id='remove-blog'>remove</Button>
           </ListItemText>
         </ListItem>
       </List>
@@ -63,13 +63,15 @@ const BlogDetails = () => {
       <CommentForm blog={blog}/>
       <TableContainer>
         <Table>
-          {comments.map(comment =>
-            <TableRow key={comment.id}>
-              <TableCell>
-                {comment.content}
-              </TableCell>
-            </TableRow>
-          )}
+          <TableBody>
+            {comments.map(comment =>
+              <TableRow key={comment.id}>
+                <TableCell>
+                  {comment.content}
+                </TableCell>
+              </TableRow>
+            )}
+          </TableBody>
         </Table>
       </TableContainer>
     </div>

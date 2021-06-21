@@ -31,22 +31,31 @@ export const initializeBlogs = () => {
 
 export const createBlog = blog => {
   return async dispatch => {
-    const addedBlog = await blogService.create(blog)
-    dispatch(setNotification({ message: 'fix notifications in errors here', isSuccess: true }, 5))
-    dispatch({
-      type: 'ADD_BLOG',
-      data: addedBlog
-    })
+    try {
+      const addedBlog = await blogService.create(blog)
+      dispatch(setNotification({ message: `A new blog '${addedBlog.title}' by ${addedBlog.author} added.`, isSuccess: true }, 5))
+      dispatch({
+        type: 'ADD_BLOG',
+        data: addedBlog
+      })
+    } catch (error) {
+      dispatch(setNotification({ message: 'Failed to add the blog to database.', isSuccess: false }, 5))
+    }
   }
 }
 
-export const removeBlog = id => {
+export const removeBlog = blog => {
   return async dispatch => {
-    await blogService.remove(id)
-    dispatch({
-      type: 'REMOVE_BLOG',
-      id
-    })
+    try {
+      await blogService.remove(blog.id)
+      dispatch(setNotification({ message: `Removed blog ${blog.title}.`, isSuccess: true }, 5))
+      dispatch({
+        type: 'REMOVE_BLOG',
+        id: blog.id
+      })
+    } catch (error) {
+      dispatch(setNotification({ message: 'Failed to remove the blog.', isSuccess: false }, 5))
+    }
   }
 }
 
@@ -59,11 +68,10 @@ export const likeBlog = id => {
       likes: blogToVote.likes + 1
     }
 
-    const returnedBlog = await blogService.update(id, changedBlog)
-    dispatch(setNotification({ message: 'fix notifications in errors here', isSuccess: true }, 5))
+    await blogService.update(id, changedBlog)
     dispatch({
       type: 'VOTE_BLOG',
-      data: returnedBlog
+      data: changedBlog,
     })
   }
 }
@@ -75,7 +83,6 @@ export const createComment = (blog, comment) => {
       ...blog,
       comments: [...blog.comments, addedComment]
     }
-    console.log(addedComment, modifiedBlog)
     dispatch({
       type: 'ADD_COMMENT_TO_BLOG',
       id: blog.id,

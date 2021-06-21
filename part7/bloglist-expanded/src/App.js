@@ -42,6 +42,9 @@ const App = () => {
   if (user === null) {
     return (
       <Container>
+        <Typography variant="h3" gutterBottom>
+          Log in to application
+        </Typography>
         <Notification />
         <LoginForm />
       </Container>

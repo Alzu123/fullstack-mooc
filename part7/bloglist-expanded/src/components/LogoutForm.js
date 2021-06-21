@@ -13,10 +13,8 @@ const LogoutForm = () => {
 
   return (
     <form onSubmit={handleLogout}>
-      <p>
-        {user.name} logged in
-        <button type='submit' id='logout-button'>logout</button>
-      </p>
+      {user.name} logged in
+      <button type='submit' id='logout-button'>logout</button>
     </form>
   )
 }

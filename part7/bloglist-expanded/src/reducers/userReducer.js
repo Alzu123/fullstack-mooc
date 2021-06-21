@@ -1,4 +1,5 @@
 import loginService from '../services/login'
+import { setNotification } from './notificationReducer'
 
 const userReducer = (state = null, action) => {
   switch (action.type) {
@@ -22,21 +23,25 @@ export const setUser = user => {
 
 export const login = (username, password) => {
   return async dispatch => {
-    const user = await loginService.login({ username, password })
-
-    window.localStorage.setItem(
-      'loggedUser', JSON.stringify(user)
-    )
-
-    dispatch({
-      type: 'SET_USER',
-      user
-    })
+    try {
+      const user = await loginService.login({ username, password })
+      dispatch(setNotification({ message: 'Logged in.', isSuccess: true }, 5))
+      window.localStorage.setItem(
+        'loggedUser', JSON.stringify(user)
+      )
+      dispatch({
+        type: 'SET_USER',
+        user
+      })
+    } catch (error) {
+      dispatch(setNotification({ message: 'Wrong username or password.', isSuccess: false }, 5))
+    }
   }
 }
 
 export const logout = () => {
   return async dispatch => {
+    dispatch(setNotification({ message: 'Logged out.', isSuccess: true }, 5))
     window.localStorage.removeItem('loggedUser')
     dispatch({
       type: 'LOGOUT',
