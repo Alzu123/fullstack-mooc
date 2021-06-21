@@ -1,15 +1,28 @@
 import React from 'react'
 import Blog from './Blog'
-import BlogForm from './BlogForm'
+
+import { TableContainer, Table, TableHead, TableRow, TableCell } from '@material-ui/core'
 
 const BlogList = ({ blogs, user }) => {
   return (
     <div>
-      <h2>blogs</h2>
-      <BlogForm />
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} user={user}/>
-      )}
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>
+                Blog Title
+              </TableCell>
+              <TableCell>
+                Blog Author
+              </TableCell>
+            </TableRow>
+          </TableHead>
+          {blogs.map(blog =>
+            <Blog key={blog.id} blog={blog} user={user}/>
+          )}
+        </Table>
+      </TableContainer>
     </div>
   )
 }

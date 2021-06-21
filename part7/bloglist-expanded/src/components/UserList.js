@@ -1,29 +1,40 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { Typography, TableContainer, Table, TableHead, TableRow, TableCell } from '@material-ui/core'
 
 const UserList = () => {
   const users = useSelector(state => state.users)
 
   return (
     <div>
-      <h2><b>Users</b></h2>
-      <table>
-        <thead>
-          <tr>
-            <td></td>
-            <td><b>blogs created</b></td>
-          </tr>
-        </thead>
-        <tbody>
+      <Typography variant='h3' gutterBottom>
+        Users
+      </Typography>
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>
+                User
+              </TableCell>
+              <TableCell>
+                Blogs Created
+              </TableCell>
+            </TableRow>
+          </TableHead>
           {users.map(user =>
-            <tr key={user.id}>
-              <td><Link to={`/users/${user.id}`}>{user.name}</Link></td>
-              <td>{user.blogs.length}</td>
-            </tr>
+            <TableRow key={user.id}>
+              <TableCell>
+                <Link to={`/users/${user.id}`}>{user.name}</Link>
+              </TableCell>
+              <TableCell>
+                {user.blogs.length}
+              </TableCell>
+            </TableRow>
           )}
-        </tbody>
-      </table>
+        </Table>
+      </TableContainer>
     </div>
   )
 }

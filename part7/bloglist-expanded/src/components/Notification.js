@@ -1,25 +1,21 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { Alert } from '@material-ui/lab'
 
 const Notification = () => {
   const notification = useSelector(state => state.notification)
-
-  const isVisible = notification.message.length > 0
-  const style = {
-    border: 'solid',
-    padding: 10,
-    borderWidth: 1,
-    display: isVisible ? '' : 'none'
-  }
-
-  const notificationType = notification.isSuccess ? 'notification' : 'notification warning'
+  const message = notification.message
+  const severity = notification.isSuccess ? 'success' : 'error'
 
   return (
-    <div className={notificationType} style={style}>
-      {notification.message}
+    <div>
+      {(message &&
+        <Alert severity={severity}>
+          {message}
+        </Alert>
+      )}
     </div>
   )
-
 }
 
 

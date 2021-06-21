@@ -1,6 +1,7 @@
 import React from 'react'
 import { useDispatch } from 'react-redux'
 import { login } from '../reducers/userReducer'
+import { TextField, Button, Typography } from '@material-ui/core'
 
 const LoginForm = () => {
   const dispatch = useDispatch()
@@ -16,23 +17,25 @@ const LoginForm = () => {
 
   return (
     <form onSubmit={handleLogin}>
+      <Typography variant="h3" gutterBottom>
+        Log in to application
+      </Typography>
       <div>
-        username
-        <input
-          type="text"
-          name="username"
-          id="username-field"
+        <TextField
+          id='username'
+          name='username'
+          label='Username'
         />
       </div>
       <div>
-        password
-        <input
-          type="password"
-          name="password"
-          id="password-field"
+        <TextField
+          id='password'
+          name='password'
+          label='Password'
+          type='password'
         />
       </div>
-      <button type="submit" id='login-button'>login</button>
+      <Button variant='contained' type='submit' id='login-button'>Login</Button>
     </form>
   )
 }

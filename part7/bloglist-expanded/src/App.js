@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react'
 import Navigation from './components/Navigation'
 import BlogList from './components/BlogList'
+import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
 import LoginForm from './components/LoginForm'
 import User from './components/User'
@@ -15,6 +16,8 @@ import {
 } from 'react-router-dom'
 import { initializeUsers } from './reducers/usersReducer'
 import BlogDetails from './components/BlogDetails'
+
+import { Container, Typography } from '@material-ui/core/'
 
 const App = () => {
   const blogs = useSelector(state => state.blogs)
@@ -38,37 +41,42 @@ const App = () => {
 
   if (user === null) {
     return (
-      <div>
-        <h2>Log in to application</h2>
+      <Container>
         <Notification />
         <LoginForm />
-      </div>
+      </Container>
     )
   }
 
   return (
-    <Router>
-      <Navigation />
-      <Notification />
+    <Container>
+      <Router>
+        <Navigation />
+        <Notification />
 
-      <Switch>
-        <Route path='/users/:id'>
-          <User />
-        </Route>
+        <Switch>
+          <Route path='/users/:id'>
+            <User />
+          </Route>
 
-        <Route path='/users'>
-          <UserList />
-        </Route>
+          <Route path='/users'>
+            <UserList />
+          </Route>
 
-        <Route path='/blogs/:id'>
-          <BlogDetails />
-        </Route>
+          <Route path='/blogs/:id'>
+            <BlogDetails />
+          </Route>
 
-        <Route path='/'>
-          <BlogList blogs={blogs} user={user} />
-        </Route>
-      </Switch>
-    </Router>
+          <Route path='/'>
+            <Typography variant="h5" gutterBottom>
+              Blogs
+            </Typography>
+            <BlogForm />
+            <BlogList blogs={blogs} user={user} />
+          </Route>
+        </Switch>
+      </Router>
+    </Container>
   )
 }
 

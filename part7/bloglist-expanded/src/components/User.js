@@ -1,6 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
+import { Typography, TableContainer, Table, TableRow, TableCell } from '@material-ui/core'
 
 const User = () => {
   const id = useParams().id
@@ -14,15 +15,23 @@ const User = () => {
 
   return (
     <div>
-      <h2><b>{user.username}</b></h2>
-      <h3><b>added blogs</b></h3>
-      <ul>
-        {user.blogs.map(blog =>
-          <li key={blog.id}>
-            {blog.title}
-          </li>
-        )}
-      </ul>
+      <Typography variant='h3' gutterBottom>
+        {user.username}
+      </Typography>
+      <Typography variant='h4' gutterBottom>
+        Added blogs
+      </Typography>
+      <TableContainer>
+        <Table>
+          {user.blogs.map(blog =>
+            <TableRow key={blog.id}>
+              <TableCell>
+                {blog.title}
+              </TableCell>
+            </TableRow>
+          )}
+        </Table>
+      </TableContainer>
     </div>
   )
 }
